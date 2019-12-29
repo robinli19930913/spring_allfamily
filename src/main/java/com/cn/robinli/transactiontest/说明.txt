@@ -1,0 +1,31 @@
+0.事务分为编程式事务和定义事务
+    编码控制事务的提交回滚，容易控制
+    定义事务 注解事务或者配置
+注意！事务是通过aop代理实现的，所以同一个service里面的方法调用要是需要都起作用需要service.method();
+
+1.事务回滚，自增id不会回滚
+    如果id也带有事务，那么所有操作都要等待id不会回滚后才能使用，这样会发生阻塞
+
+2.事务回滚
+    当被切面切中或者是加了注解的方法中抛出了RuntimeException异常时，Spring会进行事务回滚。
+    默认情况下是捕获到方法的RuntimeException异常，也就是说抛出只要属于运行时的异常（即RuntimeException及其子类）都能回滚；
+    但当抛出一个不属于运行时异常时，事务是不会回滚的。
+    下面是处理事务出现非默认情况的方式
+    ① @Transactional(rollbackFor = { Exception.class })
+    ② try catch 里面添加下面一行，就不用手动抛出运行异常了
+    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+3.@Transactional(propagation=Propagation.REQUIRED) ：如果外层调用方法本身有事务, 那么就加入到该事务中, 没有的话新建一个(这是默认的设置项)
+  @Transactional(propagation=Propagation.NOT_SUPPORTED) ：以非事务方式运行，如果外层调用方法存在事务，则把当这个事务挂起。
+  @Transactional(propagation=Propagation.REQUIRES_NEW) ：不管外层调用方法否存在事务,都创建一个自己的事务,外层调用方法的事务挂起,自己的执行完毕,再执行调用方事务
+  @Transactional(propagation=Propagation.MANDATORY) ：如果外层调用方法存在事务，则加入该事务；如果外层调用方法没有事务，则抛出异常
+  @Transactional(propagation=Propagation.NEVER) ：以非事务方式运行，如果外层调用方法存在事务，则抛出异常。
+  @Transactional(propagation=Propagation.SUPPORTS) ：如果外层调用方法存在事务，则加入该事务；如果外层调用方法没有事务，则以非事务的方式继续运行。
+  @Transactional(propagation=Propagation.NESTED) :如果外层调用方法存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果外层调用方法没有事务，则该取值等价于TransactionDefinition.PROPAGATION_REQUIRED
+  借鉴网址：https://my.oschina.net/zjllovecode/blog/1863103
+
+4.主要用到的三种场景
+外层调用方法和内层被调用方法，有异常一起回滚，没问题一起提交。（共用一个事务） REQUIRED
+内层被调用方法回滚与否，不会影响外层调用方法。而外层调用方法出异常回滚，也不会回滚内层被调用方法（两个独立的事务） REQUIRES_NEW
+内层被调用方法回滚与否，不会影响外层调用方法。而外层调用方法出异常回滚，也会回滚内层被调用方法（嵌套事务） NESTED
+

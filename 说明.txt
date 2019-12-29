@@ -1,0 +1,18 @@
+1.@MapperScan("com.cn.robinli.transactiontest.mapper")
+扫描mapper文件，不用每个mapper添加@Mapper或者@respository
+
+2.@EnableTransactionManagement
+开启事务
+
+3.@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+自动注入，没有报下面错误，数据源找不到
+Failed to configure a DataSource: ‘url’ attribute is not specified and no embedded datasource could be configured
+但是：如果和现有properties配置的一样就没问题了
+
+4.@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+存在这个注解就会有下面的错误：
+mybatis-spring-1.3.2中取消了自动注入SqlSessionFactory 和 SqlSessionTemplate，
+所以会报出Property ‘sqlSessionFactory’ or ‘sqlSessionTemplate’ are required错误。
+
+借鉴网址：https://blog.csdn.net/sui851205/article/details/89254919
+
