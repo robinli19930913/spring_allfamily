@@ -29,3 +29,15 @@
 内层被调用方法回滚与否，不会影响外层调用方法。而外层调用方法出异常回滚，也不会回滚内层被调用方法（两个独立的事务） REQUIRES_NEW
 内层被调用方法回滚与否，不会影响外层调用方法。而外层调用方法出异常回滚，也会回滚内层被调用方法（嵌套事务） NESTED
 
+5.测试案例
+    5.1 内层抛出异常的情况
+    5.1.1 外层 REQUIRED 内层 分别REQUIRES_NEW、NESTED、REQUIRED 并且 外层调用内层 try住 此时内层抛出异常 只有内层回滚外层不回滚 注意！内层REQUIRED(提交异常，事务被标记仅读)
+    5.1.2 外层 REQUIRED 内层 分别REQUIRES_NEW、NESTED、REQUIRED 并且 外层调用内层 此时内层抛出异常都回滚
+    5.1.3 外层 REQUIRED 内层没有事务 try住 都不回滚
+
+
+6.Transaction rolled back because it has been marked as rollback-only
+在selectB返回的时候，transaction被设置为rollback-only了，但是selectA正常消化掉，没有继续向外抛。
+那么selectA结束的时候，transaction会执commit操作，但是 transaction已经被设置为 rollback-only了。
+所以会出现这个错误
+
