@@ -17,7 +17,6 @@ public interface CoreUserMapperExt {
     /*添加返回当前主键*/
     @Insert({"insert into core_user (nick_name,update_at) values (#{name},now())"})
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "userId",keyColumn = "user_id",resultType = Long.class, before = false)
-    //@Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     Integer insertOfKey(CoreUserDTO coreUserDTO);
 
     /*添加返回当前主键*/

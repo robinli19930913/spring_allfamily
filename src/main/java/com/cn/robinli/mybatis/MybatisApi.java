@@ -15,4 +15,10 @@ public class MybatisApi {
         String result = mybatisService.mybatisinsert();
         return result;
     }
+
+    @RequestMapping("/testaspect")
+    public String mmm(){
+        String result = mybatisService.mmm("qwe");
+        return result;
+    }
 }

@@ -3,7 +3,6 @@ package com.cn.robinli.mybatis;
 import com.cn.robinli.mapper.CoreUserMapperExt;
 import com.cn.robinli.model.CoreUserDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -31,4 +30,8 @@ public class MybatisService {
         return "结束";
     }
 
+    public String mmm(String qwe) {
+        System.out.println(qwe);
+        return "return";
+    }
 }
